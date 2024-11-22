@@ -41,7 +41,7 @@ jobs:
     - name: Archive artifacts
       run: |
         if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          powershell -Command "Compress-Archive -Path ${{ matrix.os }}--dist/* -DestinationPath CloudreveDownloader-windows.zip"
+          powershell -Command "Compress-Archive -Path ${{ matrix.os }}-dist/* -DestinationPath CloudreveDownloader-windows.zip"
         else
           tar -czvf CloudreveDownloader-ubuntu.tar.gz ${{ matrix.os }}-dist/*
         fi
