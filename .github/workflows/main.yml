@@ -7,10 +7,15 @@ on:
   workflow_dispatch:    # 支持手动触发
 
 jobs:
+
   build-and-release:
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: true
+
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
         python-version: [3.11]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 360
@@ -40,8 +45,6 @@ jobs:
       run: |
         if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
           zip CloudreveDownloader-windows.zip dist/*
-        elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-          zip CloudreveDownloader-macos.zip dist/*
         else
           tar -czvf CloudreveDownloader-ubuntu.tar.gz dist/*
 
@@ -75,7 +78,6 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: |
           CloudreveDownloader-windows.zip
-          CloudreveDownloader-macos.zip
           CloudreveDownloader-ubuntu.tar.gz
         asset_name: CloudreveDownloader-${{ matrix.os }}.zip
         asset_content_type: application/zip
