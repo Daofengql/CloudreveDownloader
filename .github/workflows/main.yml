@@ -13,6 +13,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: [3.11]
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 360
 
     steps:
     - name: Checkout code
