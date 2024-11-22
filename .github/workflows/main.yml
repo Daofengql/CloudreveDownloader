@@ -31,7 +31,7 @@ jobs:
 
     - name: Build executable
       run: |
-          pyinstaller --onefile --distpath dist main.py
+          pyinstaller --onefile --distpath ${{ matrix.os }}-dist/ main.py
       shell: bash
 
 
