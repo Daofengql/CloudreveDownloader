@@ -9,9 +9,6 @@ on:
 jobs:
 
   build-and-release:
-    concurrency:
-      group: ${{ github.ref }}
-      cancel-in-progress: true
 
     strategy:
       matrix:
@@ -47,7 +44,7 @@ jobs:
           zip CloudreveDownloader-windows.zip ${{ matrix.os }}-dist/*
         else
           tar -czvf CloudreveDownloader-ubuntu.tar.gz ${{ matrix.os }}-dist/*
-
+        fi
       shell: bash
 
     - name: Upload artifact
