@@ -47,6 +47,7 @@ jobs:
         release_name: Release ${{ github.ref_name || 'Manual Trigger' }}
         draft: false
         prerelease: false
+        token: ${{ secrets.GITHUB_TOKEN }}   # 添加此行
 
     - name: Upload release asset
       uses: actions/upload-release-asset@v1
@@ -55,3 +56,4 @@ jobs:
         asset_path: dist/main.exe
         asset_name: CloudreveDownloader.exe
         asset_content_type: application/octet-stream
+        token: ${{ secrets.GITHUB_TOKEN }}   # 添加此行
