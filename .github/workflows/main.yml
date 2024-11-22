@@ -3,8 +3,11 @@ name: Windows Build and Release
 on:
   push:
     tags:
-      - 'v*'    # 当推送标签（如 v1.0.0）时自动触发
-  workflow_dispatch:    # 支持手动触发
+      - 'v*'    # 当推送类似 v1.0.0 的标签时自动触发
+  workflow_dispatch:    # 允许手动触发
+
+permissions:
+  contents: write   # 授予内容的写权限，必要的，用于创建发布
 
 jobs:
   build-and-release:
@@ -39,18 +42,14 @@ jobs:
     - name: Create GitHub Release
       id: create_release
       uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ github.ref_name || 'manual-trigger' }}
         release_name: Release ${{ github.ref_name || 'Manual Trigger' }}
         draft: false
         prerelease: false
 
-    - name: Upload release assets
+    - name: Upload release asset
       uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: dist/main.exe
