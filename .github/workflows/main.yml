@@ -42,18 +42,20 @@ jobs:
     - name: Create GitHub Release
       id: create_release
       uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ github.ref_name || 'manual-trigger' }}
         release_name: Release ${{ github.ref_name || 'Manual Trigger' }}
         draft: false
         prerelease: false
-        token: ${{ secrets.GITHUB_TOKEN }}   # 添加此行
 
     - name: Upload release asset
       uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: dist/main.exe
         asset_name: CloudreveDownloader.exe
         asset_content_type: application/octet-stream
-        token: ${{ secrets.GITHUB_TOKEN }}   # 添加此行
