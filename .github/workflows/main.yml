@@ -44,9 +44,9 @@ jobs:
     - name: Archive artifacts
       run: |
         if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          zip CloudreveDownloader-windows.zip dist/*
+          zip CloudreveDownloader-windows.zip ${{ matrix.os }}-dist/*
         else
-          tar -czvf CloudreveDownloader-ubuntu.tar.gz dist/*
+          tar -czvf CloudreveDownloader-ubuntu.tar.gz ${{ matrix.os }}-dist/*
 
       shell: bash
 
