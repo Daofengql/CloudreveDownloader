@@ -31,19 +31,19 @@ jobs:
 
     - name: Build executable
       run: |
-          pyinstaller -F main.py
+          pyinstaller --onefile --distpath dist main.py
       shell: bash
 
 
     - name: Archive artifacts
       run: |
         if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          zip CloudreveDownloader-windows.zip dist/CloudreveDownloader.exe
+          zip CloudreveDownloader-windows.zip dist/*
         elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-          zip CloudreveDownloader-macos.zip dist/CloudreveDownloader
+          zip CloudreveDownloader-macos.zip dist/*
         else
-          tar -czvf CloudreveDownloader-ubuntu.tar.gz dist/CloudreveDownloader
-        fi
+          tar -czvf CloudreveDownloader-ubuntu.tar.gz dist/*
+
       shell: bash
 
     - name: Upload artifact
