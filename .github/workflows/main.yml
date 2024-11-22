@@ -1,4 +1,4 @@
-name: Cross-platform Build and Release
+name: Windows Build and Release
 
 on:
   push:
@@ -7,14 +7,8 @@ on:
   workflow_dispatch:    # 支持手动触发
 
 jobs:
-
   build-and-release:
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-        python-version: [3.11]
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
     timeout-minutes: 360
 
     steps:
@@ -24,7 +18,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: '3.11'
 
     - name: Install dependencies
       run: |
@@ -34,29 +28,15 @@ jobs:
 
     - name: Build executable
       run: |
-          pyinstaller --onefile --distpath ${{ matrix.os }}-dist/ main.py
-      shell: bash
-
-
-    - name: Archive artifacts
-      run: |
-        if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          powershell -Command "Compress-Archive -Path ${{ matrix.os }}-dist/* -DestinationPath CloudreveDownloader-windows.zip"
-        else
-          tar -czvf CloudreveDownloader-ubuntu.tar.gz ${{ matrix.os }}-dist/*
-        fi
-      shell: bash
+        pyinstaller --onefile --distpath dist/ main.py
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: CloudreveDownloader-${{ matrix.os }}
-        path: |
-          CloudreveDownloader-*.zip
-          CloudreveDownloader-*.tar.gz
+        name: CloudreveDownloader
+        path: dist/main.exe
 
     - name: Create GitHub Release
-      if: ${{ matrix.os == 'ubuntu-latest' }}
       id: create_release
       uses: actions/create-release@v1
       env:
@@ -73,8 +53,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: |
-          CloudreveDownloader-windows.zip
-          CloudreveDownloader-ubuntu.tar.gz
-        asset_name: CloudreveDownloader-${{ matrix.os }}.zip
-        asset_content_type: application/zip
+        asset_path: dist/main.exe
+        asset_name: CloudreveDownloader.exe
+        asset_content_type: application/octet-stream
